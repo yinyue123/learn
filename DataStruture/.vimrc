@@ -36,3 +36,47 @@ function! CleverTab()
 endfunction
 inoremap <Tab> <C-R>=CleverTab()<CR>
 
+autocmd FileType * call g:compileByFileType()
+func! g:compileByFileType()
+	if &filetype=="c"
+		if (filereadable("Makefile")||filereadable("makefile"))
+		else
+			set makeprg=gcc\ %\ -Wall\ -std=c99\ -lm\ -g\ -o\ %<
+		endif
+		inoremap ( <c-r>=EqualSign('(')<CR>
+		inoremap { <c-r>=EqualSign('{')<CR>
+		inoremap , <c-r>=EqualSign(',')<CR>
+		inoremap + <c-r>=EqualSign('+')<CR>
+		inoremap - <c-r>=EqualSign('-')<CR>
+		inoremap % <c-r>=EqualSign('%')<CR>
+		inoremap = <c-r>=EqualSign('=')<CR>
+		inoremap ! <c-r>=EqualSign('!')<CR>
+		inoremap < <c-r>=EqualSign('<')<CR>
+		inoremap > <c-r>=EqualSign('>')<CR>
+		inoremap / <c-r>=EqualSign('/')<CR>
+		inoremap * <c-r>=EqualSign('*')<CR>
+	endif
+endfunction
+
+function! EqualSign(char)
+	let ex1 = getline('.')[col('.') - 1]
+	let ex2 = getline('.')[col('.') - 2]
+	let ex3 = getline('.')[col('.') - 3]
+	let ex4 = getline('.')[col('.') - 4]
+	if a:char =~ "[({]"
+		return "\<SPACE>".a:char
+	endif
+	if a:char =~ "[,]"
+		return a:char."\<SPACE>"
+	endif
+	if ex3 =~ a:char && a:char =~ "[-+]"
+		return "\<ESC>xxxi".a:char.a:char
+	endif
+	if ex3 =~ "[+-=!<>\/\*\%]" && a:char =~ "[=]"
+		return "\<ESC>xi".a:char."\<SPACE>"
+	endif
+	if a:char =~ "[+-=!<>\/\*\%]"
+		return "\<SPACE>".a:char."\<SPACE>"
+	endif
+	return a:char
+endfunction
