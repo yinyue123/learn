@@ -48,13 +48,15 @@ func! g:compileByFileType()
 		inoremap , <c-r>=EqualSign(',')<CR>
 		inoremap + <c-r>=EqualSign('+')<CR>
 		inoremap - <c-r>=EqualSign('-')<CR>
-		inoremap % <c-r>=EqualSign('%')<CR>
 		inoremap = <c-r>=EqualSign('=')<CR>
 		inoremap ! <c-r>=EqualSign('!')<CR>
 		inoremap < <c-r>=EqualSign('<')<CR>
 		inoremap > <c-r>=EqualSign('>')<CR>
 		inoremap / <c-r>=EqualSign('/')<CR>
 		inoremap * <c-r>=EqualSign('*')<CR>
+		inoremap % <c-r>=EqualSign('%')<CR>
+		inoremap : <c-r>=EqualSign(':')<CR>
+		inoremap ? <c-r>=EqualSign('?')<CR>
 	endif
 endfunction
 
@@ -70,12 +72,15 @@ function! EqualSign(char)
 		return a:char."\<SPACE>"
 	endif
 	if ex3 =~ a:char && a:char =~ "[-+]"
-		return "\<ESC>xxxi".a:char.a:char
+		return "\<ESC>xxxa".a:char.a:char
 	endif
-	if ex3 =~ "[+-=!<>\/\*\%]" && a:char =~ "[=]"
-		return "\<ESC>xi".a:char."\<SPACE>"
+	if ex3 =~ "[+-=!<>\*\/\%]" && ex2 =~ "\<SPACE>" && a:char =~ "[=]"
+		return "\<LEFT>".a:char."\<RIGHT>"
 	endif
-	if a:char =~ "[+-=!<>\/\*\%]"
+	if ex3 =~ "[\*\/]" && ex2 =~ "\<SPACE>" && a:char =~ "[\*\/]"
+		return "\<ESC>x\<LEFT>xa".a:char
+	endif
+	if a:char =~ "[+-=!<>\/\*\%\:\?]"
 		return "\<SPACE>".a:char."\<SPACE>"
 	endif
 	return a:char
