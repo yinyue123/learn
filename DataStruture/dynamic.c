@@ -50,7 +50,7 @@ int rec_subset (int arr[], int i, int s) {
 int dp_subset (int arr[], int s) {
 #define arr_len 6
 #define S 10
-//S = s + 1
+	//S = s + 1
 	int subset[arr_len][S];
 	int i, j;
 	for (i = 0; i < arr_len; i++)
@@ -70,6 +70,25 @@ int dp_subset (int arr[], int s) {
 		}
 	}
 	return subset[arr_len - 1][S  - 1];
+}
+
+int time_prev (int arr[][3], int s) {
+	int i;
+	for (i = 0; i < s; i++)
+}
+
+int time_max () {
+	//arr[length][1:start_time, 2:end_time, 3:value]
+	int arr[8][3] =  {
+		{1, 4, 5}, 
+		{3, 5, 1}, 
+		{0, 6, 8}, 
+		{4, 7, 4},  
+		{5, 9, 3}, 
+		{6, 10, 2}, 
+		{8, 11, 4}
+	};
+
 }
 
 void main(){
