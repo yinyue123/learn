@@ -47,14 +47,54 @@ int rec_subset (int arr[], int i, int s) {
 	}
 }
 
+int dp_subset (int arr[], int s) {
+#define arr_len 6
+#define S 10
+//S = s + 1
+	int subset[arr_len][S];
+	int i, j;
+	for (i = 0; i < arr_len; i++)
+		subset[i][0] = 1;
+	for (i = 0; i < s; i++)
+		subset[0][i] = 0;
+	subset[0][arr[0]] = 1;
+	for (i = 0; i < arr_len; i++) {
+		for (j = 0; j < s + 1; j++) {
+			if (arr[i] > s)
+				subset[i][s] = subset[i - 1][s];
+			else {
+				int a = subset[i - 1][s - arr[i]];
+				int b = subset[i - 1][s];
+				subset[i][s] = a || b;
+			}
+		}
+	}
+	return subset[arr_len - 1][S  - 1];
+}
+
 void main(){
 	{
 		int arr[] = {1, 2, 4, 1, 7, 8, 3};
-		int result = rec_opt (arr, 6);
-		int result2 = dp_opt (arr, 7);
+		int result;
+		result = rec_opt (arr, 6);
 		printf ("%d\n", result);
-		printf ("%d\n", result2);
+		result = dp_opt (arr, 7);
+		printf ("%d\n", result);
 	}
 	{
+		int arr[] = {3, 34, 4, 12, 5, 2};
+		int result;
+		result= rec_subset (arr, 6 - 1, 9);
+		printf ("%d\n", result);
+		result= rec_subset (arr, 6 - 1, 10);
+		printf ("%d\n", result);
+		result= rec_subset (arr, 6 - 1, 11);
+		printf ("%d\n", result);
+		result= rec_subset (arr, 6 - 1, 12);
+		printf ("%d\n", result);
+		result= rec_subset (arr, 6 - 1, 13);
+		printf ("%d\n", result);
+		result= dp_subset(arr, 9);
+		printf ("%d\n", result);
 	}
 }
