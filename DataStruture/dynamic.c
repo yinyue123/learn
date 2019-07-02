@@ -72,27 +72,23 @@ int dp_subset (int arr[], int s) {
 	return subset[arr_len - 1][S  - 1];
 }
 
-int time_prev (int arr[][3], int s) {
-	int i;
-	for (i = 0; i < s; i++)
+int opt (int x, int recode[], int money[], int prev[]) {
+	if (recode[x] != 0)
+		return recode[x];
+	else {
+		if (x == 1)
+			return money[1];
+		if (x == 0)
+			return 0;
+		else
+			return recode[x] = max (
+					opt (x - 1, recode, money, prev), 
+					money[x] + opt (prev[x], recode, money, prev));
+	}
 }
 
-int time_max () {
-	//arr[length][1:start_time, 2:end_time, 3:value]
-	int arr[8][3] =  {
-		{1, 4, 5}, 
-		{3, 5, 1}, 
-		{0, 6, 8}, 
-		{4, 7, 4},  
-		{5, 9, 3}, 
-		{6, 10, 2}, 
-		{8, 11, 4}
-	};
-
-}
-
-void main(){
-	{
+int main(){
+	if (0) {//bad neighbors
 		int arr[] = {1, 2, 4, 1, 7, 8, 3};
 		int result;
 		result = rec_opt (arr, 6);
@@ -100,7 +96,7 @@ void main(){
 		result = dp_opt (arr, 7);
 		printf ("%d\n", result);
 	}
-	{
+	if (0) {//compact numbers
 		int arr[] = {3, 34, 4, 12, 5, 2};
 		int result;
 		result= rec_subset (arr, 6 - 1, 9);
@@ -116,4 +112,44 @@ void main(){
 		result= dp_subset(arr, 9);
 		printf ("%d\n", result);
 	}
+	if (1) {
+		/*
+		n : 9
+		start end money [1] : 1 4 5
+		start end money [2] : 3 5 1
+		start end money [3] : 0 6 8
+		start end money [4] : 4 7 4
+		start end money [5] : 3 8 6
+		start end money [6] : 5 9 3
+		start end money [7] : 6 10 2
+		start end money [8] : 8 11 4
+		max :  12
+		*/
+		int n;
+		int start[100], end[100], prev[100], money[100], recode[100] = {0};
+		
+		int i, j;
+		printf ("n:");
+		scanf ("%d", &n);
+		for (i = 1;i < n;i++) {
+			printf ("start end money [%d]:", i);
+			scanf ("%d%d%d", &start[i], &end[i], &money[i]);
+		}
+		for (i = n;i > 0;i--) {
+			for (j = i - 1;j > 0;j--) {
+				if (i - 1 == 0) {
+					prev[i] = 0;
+					break;
+				}
+				if (start[i] > end[j]) {
+					prev[i] = j;
+					break;
+				}
+			}
+		}
+		printf ("max: %d\n", max(
+					opt (n - 1, recode, money, prev), 
+					money[n] + opt (prev[n], recode, money, prev)));
+	}
+	return 0;
 }
